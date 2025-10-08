@@ -1,9 +1,9 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <vector>
 
 class SetUtils {
 public:
-	//Об'єднання
+	//РћР±'С”РґРЅР°РЅРЅСЏ
 	static std::vector<int> association(std::vector<int> &v1, std::vector<int> &v2) {
 		std::vector<int> result = v1;
 
@@ -11,7 +11,7 @@ public:
 		size_t v2_size = v2.size();
 		size_t result_size = v1_size;
 
-		for (int i = 0; i < v2_size	; i++) {
+		for (int i = 0; i < v2_size; i++) {
 			bool isBelong = 0;
 
 			for (int j = 0; j < result_size; j++) {
@@ -30,7 +30,7 @@ public:
 		return result;
 	}
 
-	//Перетин
+	//РџРµСЂРµС‚РёРЅ
 	static std::vector<int> intersection(std::vector<int> &v1, std::vector<int> &v2) {
 		std::vector<int> result;
 
@@ -50,7 +50,7 @@ public:
 		return result;
 	}
 
-	//Різниця
+	//Р С–Р·РЅРёС†СЏ
 	static std::vector<int> difference(std::vector<int> &v1, std::vector<int> &v2) {
 		std::vector<int> result;
 
@@ -75,50 +75,68 @@ public:
 		return result;
 	}
 
-	//Симетрична різниця
+	//РЎРёРјРµС‚СЂРёС‡РЅР° СЂС–Р·РЅРёС†СЏ
 	static std::vector<int> symmetrical_difference(std::vector<int>& v1, std::vector<int>& v2) {
 		std::vector<int> assoc = association(v1, v2);
 		std::vector<int> inter = intersection(v1, v2);
 		return difference(assoc, inter);
 	}
 
-	//Доповнення
+	//Р”РѕРїРѕРІРЅРµРЅРЅСЏ
 	static std::vector<int> addition(std::vector<int>& u, std::vector<int>& v) {
 		return difference(u, v);
 	}
 };
      
+void set_output(std::vector<int>& v) {
+	size_t v_size = v.size();
+
+	std::cout << "{";
+	for (int i = 0; i < v_size; i++) {
+		std::cout << v[i];
+
+		if (i < v_size - 1)
+			std::cout << ", ";
+	}
+	std::cout << "}" << std::endl;
+}
+
 int main() {
+	setlocale(LC_CTYPE, "ukr");
+	
 	std::vector<int> A = { 1,2,3,4,5,6,7 };
 	std::vector<int> B = { 4,5,6,7,8,9,10 };
 	std::vector<int> C = { 2,4,6,8 };
 	std::vector<int> U = { 1,2,3,4,5,6,7,8,10 };
 
-	//std::vector<int> assoc = SetUtils::association(A, B);
-	/*std::vector<int> diff = SetUtils::difference(A, C);*/
-	std::vector<int> assoc = SetUtils::association(A, B);
+	std::vector<int> assoc_A_C = SetUtils::association(A, C);
+	std::vector<int> addit_C_U = SetUtils::addition(U, C);
+	std::vector<int> diff_B_additC = SetUtils::difference(B, addit_C_U);
+	std::vector<int> diff_assocAC_C = SetUtils::difference(assoc_A_C, C);
+	std::vector<int> symmetrical_left_part_right_part = SetUtils::symmetrical_difference(diff_assocAC_C, diff_B_additC);
+	
+	std::cout << "A U C = ";
+	set_output(assoc_A_C);
 
-	std::cout << "A = ";
-	for (int i : A) {
-		std::cout << i;
-		std::cout << " ";
-	}
+	std::cout << "\n";
 
-	std::cout << "\n\n";
+	std::cout << "~C = ";
+	set_output(addit_C_U);
 
-	std::cout << "B = ";
-	for (int i : B) {
-		std::cout << i;
-		std::cout << " ";
-	}
+	std::cout << "\n";
 
-	std::cout << "\n\n";
+	std::cout << "B \\ ~C = ";
+	set_output(diff_B_additC);
 
-	std::cout << "Res = ";
-	for (int i : assoc) {
-		std::cout << i;
-		std::cout << " ";
-	}
+	std::cout << "\n";
 
+	std::cout << "(A U C) \\ C = ";
+	set_output(diff_assocAC_C);
+
+	std::cout << "\n";
+
+	std::cout << "(A U C) \\ C ^ (B \\~C) = ";
+	set_output(symmetrical_left_part_right_part);
+	
 	return 0;
 }
